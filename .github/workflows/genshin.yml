@@ -1,0 +1,32 @@
+name: "Genshin Impact Helper"
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # scheduled at 0:00 (UTC+8) everyday
+
+env:
+  RUN_ENV: 'prod'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Run sign -> Expand to view logs
+        env:
+          COOKIE: ${{ secrets.COOKIE }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+        run: |
+          python genshin.py
